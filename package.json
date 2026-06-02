@@ -1,0 +1,26 @@
+{
+  "name": "pladiex-hub-api",
+  "version": "2.0.0",
+  "description": "API REST modular (MVC) de PLADIEX SCRUM sobre MariaDB",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "scrum",
+    "mvc",
+    "mariadb",
+    "express"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mysql2": "^3.11.0",
+    "pdfkit": "^0.15.2"
+  }
+}
