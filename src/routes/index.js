@@ -9,6 +9,7 @@ router.use('/proyectos',      require('./proyecto.routes'));
 router.use('/tareas',         require('./tarea.routes'));
 router.use('/sprints',        require('./sprint.routes'));
 router.use('/hitos',          require('./hito.routes'));
+router.use('/historias',      require('./historia.routes'));
 router.use('/usuarios',       require('./usuario.routes'));
 router.use('/roles',          require('./rol.routes'));
 router.use('/mensajes',       require('./mensaje.routes'));
