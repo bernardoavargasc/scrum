@@ -11,7 +11,8 @@ const app = express();
 
 // Middlewares globales
 app.use(cors());
-app.use(express.json());
+// Límite ampliado para permitir adjuntos del chat en Base64 (imágenes/documentos)
+app.use(express.json({ limit: '6mb' }));
 
 // Rutas de la API (todas bajo /api)
 app.use('/api', rutas);
