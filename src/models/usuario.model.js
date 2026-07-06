@@ -27,6 +27,19 @@ const Usuario = {
     return rows[0] || null;
   },
 
+  // Busca un usuario por correo (uso: login con Google). Incluye el nombre del rol.
+  async obtenerPorCorreo(correo) {
+    if (!correo) return null;
+    const [rows] = await pool.query(
+      `SELECT u.id, u.nombres, u.correo, u.telefono, u.iniciales,
+              u.rol_id, u.activo, u.debe_cambiar_pass, r.nombre AS nombre_rol
+       FROM usuarios u
+       LEFT JOIN roles r ON u.rol_id = r.id
+       WHERE u.correo = ? LIMIT 1`, [correo]
+    );
+    return rows[0] || null;
+  },
+
   // Devuelve la fila incluyendo password (uso interno: login / verificación)
   async obtenerConPassword(id) {
     const [rows] = await pool.query(
