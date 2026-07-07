@@ -4,8 +4,13 @@ const asyncHandler = require('../middlewares/asyncHandler');
 const { passwordMatches } = require('../utils/password');
 const { OAuth2Client } = require('google-auth-library');
 
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-const googleClient = GOOGLE_CLIENT_ID ? new OAuth2Client(GOOGLE_CLIENT_ID) : null;
+// El Client ID de Google es PÚBLICO (va también en el frontend), así que se puede
+// dejar aquí como valor por defecto. Ventaja: NO hace falta configurar variables
+// de entorno en Render — con solo subir el código, el login con Google funciona.
+// Si algún día quieres cambiarlo sin tocar el código, define GOOGLE_CLIENT_ID en Render.
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
+  || '990327826521-ihhsigkenuaptge7c9kph76lvjgqe603.apps.googleusercontent.com';
+const googleClient = new OAuth2Client(GOOGLE_CLIENT_ID);
 
 exports.login = asyncHandler(async (req, res) => {
   const { id_usuario, password } = req.body;

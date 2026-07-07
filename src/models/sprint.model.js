@@ -21,7 +21,7 @@ const Sprint = {
   async crear({ nombre, proyecto_id, fecha_inicio, fecha_fin }) {
     const [r] = await pool.query(
       `INSERT INTO sprints (nombre, estatus, fecha_inicio, fecha_fin, proyecto_id)
-       VALUES (?, 'activo', ?, ?, ?)`,
+       VALUES (?, 'activo', COALESCE(?, CURDATE()), COALESCE(?, DATE_ADD(CURDATE(), INTERVAL 7 DAY)), ?)`,
       [
         nombre,
         fecha_inicio || null,
@@ -29,15 +29,6 @@ const Sprint = {
         proyecto_id || null,
       ]
     );
-    // Si no mandaron fechas, poner por defecto hoy + 7 días
-    if (!fecha_inicio || !fecha_fin) {
-      await pool.query(
-        `UPDATE sprints
-         SET fecha_inicio = COALESCE(fecha_inicio, CURDATE()),
-             fecha_fin    = COALESCE(fecha_fin, DATE_ADD(CURDATE(), INTERVAL 7 DAY))
-         WHERE id = ?`, [r.insertId]
-      );
-    }
     return this.obtener(r.insertId);
   },
 
@@ -59,8 +50,8 @@ const Sprint = {
   async eliminar(id) {
     const fila = await this.obtener(id);
     if (!fila) return null;
-    // Liberar las tareas del sprint para no romper la FK
-    await pool.query('UPDATE tareas SET sprint_id = NULL WHERE sprint_id = ?', [id]);
+    // Borrar las tareas del sprint (no dejarlas huérfanas con fecha)
+    await pool.query('DELETE FROM tareas WHERE sprint_id = ?', [id]);
     await pool.query('DELETE FROM sprints WHERE id = ?', [id]);
     return fila;
   },
